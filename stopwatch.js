@@ -2,16 +2,16 @@ function Stopwatch () {
 
     let startTime = null;
     let endTime = null;
-    let running = false;
-    let reset = false;
-    let intervalId;
+    let isRunning = false;
+    let isReset = false;
+    let runningTimerId;
 
     let updateTime = () => {
         document.querySelector('.stopwatch-time').textContent = this.time.toFixed(2);
     }
 
-    let updateInterval = () => {
-        intervalId = setInterval( () => {
+    let showRunningTimer = () => {
+        runningTimerId = setInterval( () => {
         let now = new Date();   
             this.time = (now.getTime() - startTime.getTime()) / 1000;
         updateTime();
@@ -22,50 +22,48 @@ function Stopwatch () {
         document.querySelector('.user-message').textContent = input;
         setTimeout(() => {
         document.querySelector('.user-message').textContent = "";
-        }, 1500);
+        }, 2000);
     }
 
     this.time = 0.0;
 
     this.start = function() {
-        if (running) {
+        if (isRunning) {
             this.userMessage("Hey dummy, can't you see it's running?"); 
-        } else if (reset || !startTime){
-            running = true;
+        } else if (isReset || !startTime){
+            isRunning = true;
             startTime = new Date();
-            reset = false;
-            updateInterval();
+            isReset = false;
+            showRunningTimer();
             console.log('Timer Started');
         } else {
-            running = true;
-            updateInterval();
+            isRunning = true;
+            showRunningTimer();
             console.log('Timer Restarted');
         }
     }
 
     this.stop = function() {
-        if (!running) {
+        if (!isRunning) {
             this.userMessage("Try starting it first."); 
         } else {
-            running = false;
+            isRunning = false;
             endTime = new Date();
-            const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
-            this.time = seconds
-            
-            clearInterval(intervalId);
+            this.time = (endTime.getTime() - startTime.getTime()) / 1000;
+            clearInterval(runningTimerId);
             updateTime();
             console.log('Timer Stopped');
           }
     }
 
     this.reset = function() {
-        if (running) {
+        if (isRunning) {
             this.userMessage("You must stop it first."); 
         } else if (this.time === 0.0) {
             this.userMessage("I'm already at 0.00"); }
         else {
             this.time = 0;
-            reset = true;
+            isReset = true;
             updateTime();
             console.log('Timer Reset');
          } 

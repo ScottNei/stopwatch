@@ -1,7 +1,5 @@
 import Stopwatch from "./stopwatch.js";
 
-const title = 'Stopwatch';
-
 const sw = new Stopwatch();
 
 function Html() {
@@ -31,6 +29,6 @@ function Html() {
     return div;
 }
 
-document.body.prepend(Html());
+document.body.appendChild(Html());
 
 
